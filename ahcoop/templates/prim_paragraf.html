@@ -1,0 +1,35 @@
+{% load staticfiles %}
+
+{% include "header_inicio.html" %} 
+
+<script>
+	$( document ).ready(function() {
+	    $("#botao-carregar").click(function () { 
+    		var idHistoria= $("#idHistoria").val();
+      		$("#resultado").attr('src', '.././admin/ahcoop/historia/' + idHistoria + '#historia_form');
+		});
+	})
+</script>
+
+<div class="container">
+	
+  	 <h5> Entre com o codigo da historia para cadastrar o primeiro paragrafo:</h5>   
+  	 <div>
+    		<div class="form-group">
+      			<label> Codigo Historia:</label> <br>
+      			<span class="col-md-1">
+      				<input type="char" class="form-control" id="idHistoria">
+  				</span>
+  				<button id="botao-carregar" class="btn btn-primary btn-md">Carregar historia</button>
+    		</div>
+    		<div class="form-footer">
+    		 
+  	 </div>
+  	 
+</div>    
+	
+<iframe src="" width="100%" height="430px" frameborder="0" name="resultado" id="resultado"> </iframe>
+
+</body>
+</html>
+

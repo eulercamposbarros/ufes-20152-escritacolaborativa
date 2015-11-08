@@ -1,0 +1,41 @@
+{% include "header.html"%} 
+{% load staticfiles %}
+
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-1.10.2.min.js' %}"></script>
+
+
+
+<div class="container">
+<div class="jumbotron">
+<div class="row white">
+    <div class="columns large-12">
+        <form method="POST" id="CadastroAprendizagem">
+            {% csrf_token %}
+			
+			<div class="col-xs-4 col-lg-4">
+				<div class="list-group">
+					<input type="text" class="form-control" placeholder="Codigo" id="cod" autocomplete="off"><br>
+					<input type="text" class="form-control" placeholder="Tipo" required autofocus id="tipo" autocomplete="off" onkeyup="trocaVirgulaPorPonto();"><br>
+					<input type="text" class="form-control" placeholder="DEscrição" required autofocus id="desc" autocomplete="off"><br>
+				</div>
+			</div>
+
+			<div class="col-xs-4 col-lg-4">			
+				<textarea class="form-control" placeholder="Principais Componentes" rows="3" id="componentes" autocomplete="off"></textarea></br>
+				<textarea class="form-control" placeholder="Sobre a origem do Produto" rows="3" id="origem" autocomplete="off"></textarea></br>
+				<br>
+				<button  type="submit"  class="btn btn-danger">
+						Adicionar
+				</button>
+				
+			</div>	
+		</form>	
+	</div>
+</div>
+</div>
+</div>
+<script src="{% static 'scripts/main.js' %}"></script>
+	
+

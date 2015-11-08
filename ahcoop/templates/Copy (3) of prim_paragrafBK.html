@@ -1,0 +1,55 @@
+{% include "header_inicio.html"%} 
+{% load staticfiles %}
+
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-1.10.2.min.js' %}"></script>
+
+
+
+<div class="container">
+	<div class="jumbotron">
+		<div class="row white">
+			<div class="columns large-12">		
+				<form method="POST" id="prim_paragrafo">
+				{% csrf_token %}
+			
+					<input type="hidden" id="IDMissao" 
+						{% if miss %}value="{{miss.id}}" 
+						{% endif %}>
+					<input type="text"  class="form-control input-sm"  id="nomeMissao" 
+						{% if miss %}value="{{miss.nomeMissao}}" 
+						{% endif %}
+						placeholder="Título da Missão">
+					<input type="text"  class="form-control input-sm"  id="focoMissao"
+						{% if miss %}value="{{miss.focoMissao}}" 
+						{% endif %} 
+						placeholder="Foco da Missão">						
+			
+						<p>Descrição Detalhada:
+						</p>
+						<textarea class="form-control" rows="3" id="descDetalhada" >
+							{% if miss %}{{miss.detalhesMissao}} 
+							{% endif %}
+						</textarea>
+			
+							<br>
+					<div style="text-align: right;"> 
+						<button  type="submit"  class="btn btn-danger">
+							{% if miss %} Salvar{% else %} Adicionar 
+							{% endif %}
+						</button>
+					</div>	
+			
+					<div id="results"></div>
+		<!--	<script src="{% static 'scripts/main.js' %}"></script> -->
+				</form>	
+		
+		
+			</div>
+		</div>
+	</div>
+</div>
+<script src="{% static 'scripts/main.js' %}"></script>
+</body>
+</html>
