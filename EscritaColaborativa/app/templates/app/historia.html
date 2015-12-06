@@ -1,0 +1,56 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+
+{% block content %}   
+
+
+
+<div class="container">
+      <h1>História</h1>
+
+    <div class="list-group">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Listar História</h3>
+              </div>
+            
+              <div class="panel-body">   
+                
+                  <form method="post" id="salvar-edicao" action="salvar_edicao">                
+                    {% csrf_token %}
+                    <div class="row" style="margin-top:20px;">            
+                        <div class="form-group has-warning col-sm-4">
+                            <label for="historia">Selecione a História</label>
+                              <select  class="form-control historia" required>
+                                <option id="0"></option>
+                                {%if historias %}
+                                    {% for value in historias %}
+                                        <option id="{{value.pk}}">{{ value.tit_hist}}</option>
+                                    {% endfor %}
+                                {% endif %}
+                              </select>
+                         </div>
+                       <input type="hidden" id="cod_hist" name="cod_hist" value="{{value.cod_escrit}}">                       
+                    </div>                           
+                
+                 </form>                       
+
+              <hr>   
+
+            <div class="conteudo-historia">
+               
+
+            </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'app/scripts/listar_historia.js' %}"></script>  
+{% endblock %}

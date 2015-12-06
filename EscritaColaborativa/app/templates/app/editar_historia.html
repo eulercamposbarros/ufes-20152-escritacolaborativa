@@ -1,0 +1,105 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+
+{% block content %}   
+<style>
+ textarea {
+    max-width: 700px;
+    max-height: 500px;
+}
+ button{
+     max-width: 70px;
+     font-size:11px;
+ }
+</style>
+
+
+<div class="container">
+      <h1>História</h1>
+
+    {%if tipo == "sucesso" %}
+
+            <div class="alert alert-success">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Success! </strong>{{mensage}}
+            </div>
+
+    {% endif %}
+
+
+    {%if tipo == "erro" %}
+
+            <div class="alert alert-danger">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Erro! </strong>{{mensage}}
+            </div>
+
+    {% endif %}
+
+
+    <div class="list-group">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Edição de História</h3>
+              </div>
+            
+
+            
+              <div class="panel-body">   
+                <form method="post" id="salvar-edicao" action="salvar_edicao">                
+                    {% csrf_token %}
+                   <div class="row" style="margin-top:20px;">            
+                        <div class="form-group has-warning col-sm-4">
+                            <label for="historia">Selecione a História</label>
+                              <select  class="form-control historia" required>
+                                <option id="0"></option>
+                                {%if historias %}
+                                    {% for value in historias %}
+                                        <option id="{{value.pk}}">{{ value.tit_hist}}</option>
+                                    {% endfor %}
+                                {% endif %}
+                              </select>
+                         </div>
+
+                       <input type="hidden" id="cod_hist" name="cod_hist" value="{{value.cod_escrit}}">
+
+                        <div class="form-group has-warning col-sm-2">
+                            <label for="atividade">Informe seu código</label>
+                            <input type='text'  id="cod_escr" name="cod_escr" class="form-control" maxlength="2"  required/>	                                  
+                        </div>
+                       
+                       <div class="col-sm-6">
+                            <div class="form-group" style="margin-top:27px">				                                  
+		                        <button id="validar" type="button"  name="validar" class="btn btn-sm btn-default">Validar</button>		  
+	                        </div>          
+                       </div>
+                    </div>                                                     
+
+               <hr>
+               
+               
+                    
+                    <div class="has-warning ">                        
+                        <textarea class="form-control" rows="5" id="descricao_historia"  name="descricao_historia" placeholder="Vamos Continuar Escrevendo !" required></textarea>
+                    </div>
+
+                    <div style="margin-top:30px" class="bot-enviar">
+                        <div class="form-group ">				  
+		                    <button id="salvar" type="submit"  name="salvar" class="btn btn-sm btn-primary">Salvar</button>		  
+	                    </div>          
+                    </div>
+
+                </form>
+                      
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+{% endblock %}
+{% block scripts %}
+
+    <script src="{% static 'app/scripts/editar_historia.js' %}"></script>  
+
+{% endblock %}
