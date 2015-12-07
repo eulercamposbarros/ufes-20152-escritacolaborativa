@@ -21,20 +21,27 @@
 
             <div class="alert alert-success">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Success! </strong>{{mensage}}
+              <strong>Contribuição registrada com successo!</strong>
             </div>
 
     {% endif %}
-
 
     {%if tipo == "erro" %}
 
             <div class="alert alert-danger">
               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-              <strong>Erro! </strong>{{mensage}}
+              <strong>{{mensage}}</strong>
             </div>
 
     {% endif %}
+
+
+    <div id="errorMessage" class="alert alert-danger" hidden>
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>
+            <label></label>
+        </strong>
+    </div>
 
 
     <div class="list-group">
@@ -51,8 +58,8 @@
                    <div class="row" style="margin-top:20px;">            
                         <div class="form-group has-warning col-sm-4">
                             <label for="historia">Selecione a História</label>
-                              <select  class="form-control historia" required>
-                                <option id="0"></option>
+                              <select class="form-control historia" required>
+                                <option id="0">> Selecione</option>
                                 {%if historias %}
                                     {% for value in historias %}
                                         <option id="{{value.pk}}">{{ value.tit_hist}}</option>
@@ -61,31 +68,39 @@
                               </select>
                          </div>
 
-                       <input type="hidden" id="cod_hist" name="cod_hist" value="{{value.cod_escrit}}">
+                       <input type="hidden" id="cod_hist" name="cod_hist">
 
                         <div class="form-group has-warning col-sm-2">
-                            <label for="atividade">Informe seu código</label>
-                            <input type='text'  id="cod_escr" name="cod_escr" class="form-control" maxlength="2"  required/>	                                  
+                            <label for="atividade">Selecione o Escritor</label>
+                            {#<input type='text'  id="cod_escr" name="cod_escr" class="form-control" maxlength="2"  required/>#}
+                            <select class="form-control escritor" required>
+                                <option id="0">> Selecione</option>
+                                {%if escritores %}
+                                    {% for value in escritores %}
+                                        <option id="{{value.pk}}">{{ value.nome_escrit}}</option>
+                                    {% endfor %}
+                                {% endif %}
+                              </select>
                         </div>
-                       
-                       <div class="col-sm-6">
-                            <div class="form-group" style="margin-top:27px">				                                  
-		                        <button id="validar" type="button"  name="validar" class="btn btn-sm btn-default">Validar</button>		  
-	                        </div>          
-                       </div>
-                    </div>                                                     
 
-               <hr>
-               
-               
+                       <input type="hidden" id="cod_escrit" name="cod_escrit">
+                       
+                    </div>                                                     
                     
-                    <div class="has-warning ">                        
-                        <textarea class="form-control" rows="5" id="descricao_historia"  name="descricao_historia" placeholder="Vamos Continuar Escrevendo !" required></textarea>
+                    <div class="has-warning" id="areaHistoria" hidden>
+                        <hr>
+
+                        Continuação da história:
+
+                        <br />
+                        <br />
+
+                        <textarea class="form-control" rows="5" id="descricao_historia"  name="descricao_historia" placeholder="Vamos continuar escrevendo !" required></textarea>
                     </div>
 
-                    <div style="margin-top:30px" class="bot-enviar">
+                    <div style="margin-top:30px" class="bot-enviar" hidden>
                         <div class="form-group ">				  
-		                    <button id="salvar" type="submit"  name="salvar" class="btn btn-sm btn-primary">Salvar</button>		  
+		                    <button id="salvar" type="submit" name="salvar" class="btn btn-sm btn-primary">Salvar</button>		  
 	                    </div>          
                     </div>
 

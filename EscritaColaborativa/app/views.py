@@ -29,12 +29,14 @@ def home(request):
 
 def editar_historia(request):
     historias = Historia.objects.all()
+    escritores = Escritores.objects.all()
     return render(
         request,
         'app/editar_historia.html',
         context_instance = RequestContext(request,
         {
-            'historias': historias,            
+            'historias': historias,
+            'escritores': escritores,
         })
     )
 
@@ -72,57 +74,84 @@ def listar_interacao_historia(request):
        
 
 def validar_escritor(request):
-
-    historia = request.GET['cod_hist']
-    escritor = request.GET['cod_escr']
-    acesso = 'negado'
-    mensagem = ''
-
-    data_atual = datetime.now
+    
+    cod_historia = request.GET.get('cod_hist', '')
+    cod_escritor = request.GET.get('cod_escrit', '')
 
     #   Verifica Interação do dia
     
-    sequencia_escritor = Participantes.objects.get(cod_escrit = escritor).seq_particip
-    escritor = Escritores.objects.get(cod_escrit = escritor)
+    print('cod:' + cod_historia)
 
-    if Partes.objects.filter(data_inicio = data_atual, cod_escrit_id = escritor.id):
-        acesso = 'negado'
-        mensagem = 'Interação já realizada hoje'
+    if not cod_historia or cod_historia == '0':
+        dados = {   "acesso" : 'negado',
+                    "message" : 'Selecione uma história válida.'
+                }
+        return HttpResponse(json.dumps(dados))
+
+
+
+    if not cod_escritor or cod_escritor == '0':
+        dados = {   "acesso" : 'negado',
+                    "message" : 'Selecione um escritor válido.'
+                }
+        return HttpResponse(json.dumps(dados))
+
+
+
+    if Historia.objects.filter(cod_hist = cod_historia):
+        historia = Historia.objects.filter(cod_hist = cod_historia)
     else:
+        dados = {   "acesso" : 'negado',
+                    "message" : 'Selecione uma história válida.'
+                }
+        return HttpResponse(json.dumps(dados))
 
-        if int(sequencia_escritor)-1 != 0:
-            if Partes.objects.filter(data_inicio = data_atual, cod_escrit_id = Partes.objects.filter(data_inicio = data_atual, cod_escrit_id = escritor.id -1)):
-                
-                if Participantes.objects.filter(cod_hist = historia , cod_escrit = escritor):
-                    acesso ='liberado'
-                else:
-                    acesso = 'negado'    
 
-            else:
-                acesso = 'negado'
 
-        else:
+    if Escritores.objects.filter(cod_escrit = cod_escritor):
+        escritor = Escritores.objects.get(cod_escrit = cod_escritor)
+    else:
+        dados = {   "acesso" : 'negado',
+                    "message" : 'Selecione um escritor válido.'
+                }
+        return HttpResponse(json.dumps(dados))
 
-            if Participantes.objects.filter(cod_hist = historia , cod_escrit = escritor):
-                acesso ='liberado'
-            else:
-                acesso = 'negado'
 
-        
-    return HttpResponse(acesso)
+
+    if Participantes.objects.filter(cod_hist = cod_historia, cod_escrit = escritor.cod_escrit):
+        sequencia_escritor = Participantes.objects.filter(cod_hist = cod_historia, cod_escrit = escritor.cod_escrit)[0].seq_particip
+    else:
+        dados = {   "acesso" : 'negado',
+                    "message" : 'O escritor selecionado não participa dessa história.'
+                }
+        return HttpResponse(json.dumps(dados))
+
+
+
+    if Partes.objects.filter(data_inicio = datetime.now, cod_escrit_id = escritor.id):
+        dados = {   "acesso" : 'negado',
+                    "message" : 'Esse escritor já contribuiu com essa história hoje.'
+                }
+        return HttpResponse(json.dumps(dados))
+    
+
+
+    return HttpResponse(json.dumps({ "acesso" : 'liberado' }))
+
 
 
 def salvar_edicao(request):
-    
+    descricao = request.POST.get('descricao_historia', '')
 
-    if request.POST['descricao_historia'] != "":
-        escritor= Escritores.objects.get(cod_escrit = request.POST['cod_escr'])
+    if descricao:
+        print('entrou')
+        escritor= Escritores.objects.get(cod_escrit = request.POST['cod_escrit'])
         historia = Historia.objects.get(cod_hist = request.POST['cod_hist'])
     
         parte = Partes()
         parte.cod_escrit = escritor
         parte.cod_hist = historia
-        parte.desc_parte = request.POST['descricao_historia']
+        parte.desc_parte = descricao
     
         parte.save()
         return render(
@@ -130,7 +159,8 @@ def salvar_edicao(request):
             'app/editar_historia.html',
             context_instance = RequestContext(request,
             {
-                'historias': Historia.objects.all(),            
+                'historias': Historia.objects.all(),
+                'escritores': Escritores.objects.all(),
                 'mensage': 'Salvo com sucesso',
                 'tipo': 'sucesso'
             })
@@ -141,8 +171,9 @@ def salvar_edicao(request):
             'app/editar_historia.html',
             context_instance = RequestContext(request,
             {
-                'historias': Historia.objects.all(),            
-                'mensage': 'Favor Preencher a descrição',
+                'historias': Historia.objects.all(), 
+                'escritores': Escritores.objects.all(),
+                'mensage': 'Favor preencher a descrição da história',
                 'tipo': 'erro'
             })
         )

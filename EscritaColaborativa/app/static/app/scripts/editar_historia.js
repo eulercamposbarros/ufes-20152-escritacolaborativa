@@ -1,44 +1,50 @@
 ﻿jQuery(function ($) {
 
-    var atividade = function () {
+    function hideAlerts() {
 
-        $('.historia').change(function (e) {
-            
-            e.preventDefault();
+        $('.alert-danger').hide();
+        $('.alert-success').hide();
 
-            var historia_selecionada = $(this).children('option:selected').attr('id');
+    }
 
-            if (historia_selecionada != 0) {
+    var init = function () {
 
-                $('#cod_hist').val(historia_selecionada);
-                
-            }
+        $('.historia').change(function () {
+
+            hideAlerts();
+
+            $('#cod_hist').val($(this).children('option:selected').attr('id'));
 
         });
-    };
 
+        $('.escritor').change(function () {
 
-    var validar_escritor = function () {
-        $('#validar').click(function (e) {
-            
+            hideAlerts();
+
+            $('#cod_escrit').val($(this).children('option:selected').attr('id'));
+
             $.ajax({
                 url: './validar_escritor/', // the endpoint            
                 type: "GET", // http method,            
                 data: {
                     cod_hist: $('#cod_hist').val(),
-                    cod_escr: $('#cod_escr').val()
+                    cod_escrit: $('#cod_escrit').val()
                 }, // data sent with the post request
                 // handle a successful response
                 success: function (data) {
 
-                    if (data == 'liberado') {
-                        $('#descricao_historia').show();
+                    var result = JSON.parse(data);
+
+                    if (result.acesso == 'liberado') {
+                        console.log(result.acesso);
+                        $('#areaHistoria').show();
                         $('.bot-enviar').show();
                     }
                     else {
-                        $('#descricao_historia').hide();
+                        $('#areaHistoria').hide();
                         $('.bot-enviar').hide();
-                        
+                        $('#errorMessage').show();
+                        $('#errorMessage label').text(result.message)
                     }
 
                 },
@@ -46,24 +52,13 @@
                 error: function (xhr, errmsg, err) {
                     // redirecionar para página de erro
                     alert('Acho que tivemos um problema.\nFavor entrar em contato com o administrador do sistema');
-
                 }
             });
-     
-            
 
         });
-    }
 
-
-    var init = function () {
-        
-        $('#descricao_historia').hide();
-        $('.bot-enviar').hide();
-        atividade();
-        validar_escritor();
     };
 
     init();
-    
+
 });
